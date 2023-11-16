@@ -1,6 +1,7 @@
 package com.example.chatio.di
 
 import android.util.Log
+import com.example.chatio.feature_chat.presentation.SocketHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,13 +18,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSocket() : Socket? {
-        return try {
-            IO.socket("http://chat.socket.io")
-        } catch (e: URISyntaxException) {
-            Log.d("Inside App Module", "Invalid Socket")
-            null
-        }
+    fun provideSocketHandler() : SocketHandler {
+        return SocketHandler()
     }
 
 }

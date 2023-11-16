@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.chatio.ui.theme.ChatIOTheme
 import dagger.hilt.android.AndroidEntryPoint
+import io.socket.emitter.Emitter
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity() : ComponentActivity() {
-    private val viewModel = viewModels<MainViewModel>()
+class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,4 +27,6 @@ class MainActivity() : ComponentActivity() {
             }
         }
     }
+
+
 }
