@@ -8,20 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class SocketHandler  {
-    val localMsg : MutableStateFlow<Message> = MutableStateFlow(Message("","",""))
+    //val localMsg : MutableStateFlow<Message> = MutableStateFlow(Message("","",""))
     var socket: Socket? = null
 
-
-    suspend fun registerOnNewChat() {
-
-
-
-    }
-
-//    fun initAndGetSocket(): Socket? {
-//
-//        return socket
-//    }
 
     fun disconnectSocket() {
         socket?.disconnect()
@@ -38,11 +27,7 @@ class SocketHandler  {
     }
 
     companion object {
-        const val SOCKET_URL = "http://10.0.2.2:3000"
+        const val SOCKET_URL = "http://192.168.1.77:3000"
     }
 
-}
-
-interface OnMsgReceived{
-    fun onRecieve(msg: Message)
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.chatio.feature_chat.presentation.chatscreen.ChatScreen
 import com.example.chatio.ui.theme.ChatIOTheme
 import dagger.hilt.android.AndroidEntryPoint
 import io.socket.emitter.Emitter
@@ -23,9 +24,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ChatIOTheme {
-
+                ChatScreen(viewModel = viewModel)
             }
         }
+    }
+
+    override fun onDestroy() {
+        viewModel.socket.disconnectSocket()
+        super.onDestroy()
     }
 
 
