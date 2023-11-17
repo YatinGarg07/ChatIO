@@ -11,4 +11,5 @@ data class Message(
     @PrimaryKey val id: Int? = null
 ) {
 
+
 }

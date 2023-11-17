@@ -52,14 +52,6 @@ import com.example.chatio.feature_chat.presentation.util.Message
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-val list = listOf<Message>(
-    Message(
-        "Yatin",
-        "",
-        "lajfojsdoifisojf o ijo jo sofjo ijsoijf  oij  oi jo  jfiodji jij"
-    )
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
@@ -68,10 +60,11 @@ fun ChatScreen(
     val msgs by viewModel.listOfMsgs.collectAsState()
     val inputMessage by viewModel.inputMessage.collectAsState()
 
+
     Column {
         val state = rememberLazyListState()
         LaunchedEffect(key1 = msgs){
-            state.animateScrollToItem(msgs.size-1)
+            if(msgs.isNotEmpty()) state.animateScrollToItem(msgs.size-1)
         }
 
         // Message Area

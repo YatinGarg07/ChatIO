@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatio.feature_chat.domain.repository.ChatRepository
 import com.example.chatio.feature_chat.presentation.util.Message
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,14 +13,20 @@ import io.socket.client.Socket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val socketHandler: SocketHandler
+    private val socketHandler: SocketHandler,
+    private val repository: ChatRepository
 ): ViewModel() {
+
 
     private val _listOfMsgs : MutableStateFlow<List<Message>> =
         MutableStateFlow(
@@ -48,6 +55,13 @@ class MainViewModel @Inject constructor(
                 if(d.toString().isNotEmpty()){
                     val msg = Gson().fromJson(d[0].toString(), Message::class.java)
                     Log.d("Inside View Model", msg.toString())
+
+                    viewModelScope.launch {
+                        // Scope For Improvement
+                        val newMessage = com.example.chatio.feature_chat.domain.model.Message(username = msg.username, timeStamp = msg.timeStamp, msg = msg.msg)
+                        repository.insertMessage(newMessage)
+                    }
+
                     val newList = _listOfMsgs.value + msg
                     _listOfMsgs.value = newList
 
@@ -79,6 +93,35 @@ class MainViewModel @Inject constructor(
             }
 
         }
+
+        if(inputMessage.value.equals("Get All")){
+            //Log.d("In ViewModel, OnSendClicked", inputMessage.equals("Get All").toString())
+
+            viewModelScope.launch(Dispatchers.IO) {
+
+                val newList = repository.getMessages().collect(){
+
+                   val localList =  it.map {
+                       Message(username = it.username, timeStamp =  it.timeStamp, msg = it.msg)
+                    }
+                    Log.d("OnSendClicked, new List", localList.toString())
+
+                    _listOfMsgs.value = localList
+                }
+                _inputMessage.value = ""
+
+            }
+
+        }
+        else if(inputMessage.value.equals("Delete All")){
+
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.deleteAll()
+                _listOfMsgs.value = emptyList()
+                _inputMessage.value = ""
+            }
+
+        }
         else if(_inputMessage.value.isNotEmpty()){
 
             val sendMessage = Message(username = username, "12:00",inputMessage.value)
@@ -91,6 +134,7 @@ class MainViewModel @Inject constructor(
 
             _inputMessage.value = ""
         }
+
     }
 
 }

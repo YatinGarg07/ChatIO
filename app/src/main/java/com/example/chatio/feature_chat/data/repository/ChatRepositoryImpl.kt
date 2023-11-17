@@ -1,28 +1,25 @@
 package com.example.chatio.feature_chat.data.repository
 
+import com.example.chatio.feature_chat.data.data_source.MessageDao
+import com.example.chatio.feature_chat.domain.model.Message
 import com.example.chatio.feature_chat.domain.repository.ChatRepository
-import com.example.chatio.feature_chat.presentation.util.Message
 import io.socket.client.Socket
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
-    val socket: Socket
+    private val dao: MessageDao
 ) : ChatRepository {
-    override fun getChats(): Flow<List<Message>> {
-        TODO("Not yet implemented")
+    override fun getMessages(): Flow<List<Message>> {
+      return dao.getNotes()
     }
 
-    override suspend fun insertChat(msg: Message) {
-        TODO("Not yet implemented")
+    override suspend fun insertMessage(msg: Message) {
+        dao.insertMessage(msg)
     }
 
-    override suspend fun sendMessage(msg: Message) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getMessage(): Message {
-        TODO("Not yet implemented")
+    override suspend fun deleteAll() {
+        dao.deleteAll()
     }
 
 

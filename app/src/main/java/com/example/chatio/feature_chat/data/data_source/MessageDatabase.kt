@@ -11,5 +11,8 @@ import com.example.chatio.feature_chat.domain.model.Message
 abstract class MessageDatabase : RoomDatabase(){
 
     abstract val messageDao: MessageDao
+    companion object{
+        const val DATABASE_NAME = "notes_db"
+    }
 
 }
