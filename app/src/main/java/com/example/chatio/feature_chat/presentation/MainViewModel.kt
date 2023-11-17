@@ -20,19 +20,20 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val socketHandler: SocketHandler
 ): ViewModel() {
-    var username = "SOCKET-IO"
+
     private val _listOfMsgs : MutableStateFlow<List<Message>> =
         MutableStateFlow(
-            listOf(Message(username = username, timeStamp = "", msg = "What's Your Name"))
+            listOf(Message(username = "SOCKETIO", timeStamp = "", msg = "What's Your Name"))
         )
     val listOfMsgs = _listOfMsgs.asStateFlow()
 
+    var username = "SOCKET-IO"
     val socket = socketHandler
 
     private val _inputMessage = MutableStateFlow("")
     val inputMessage = _inputMessage.asStateFlow()
 
-    private suspend fun initSocketIO(){
+    private fun initSocketIO(){
         try {
             socketHandler.socket = IO.socket(SocketHandler.SOCKET_URL)
             socketHandler.socket?.connect()
@@ -40,8 +41,6 @@ class MainViewModel @Inject constructor(
         catch(e: Error){
             e.printStackTrace()
         }
-
-
 
         socketHandler.socket?.on(SocketHandler.CHAT_KEYS.NEW_MESSAGE){ args ->
             args?.let { d ->
@@ -64,7 +63,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onSendClicked(){
-        if(username.equals("SOCKETIO") && _inputMessage.value.isNotEmpty()){
+        if(username.equals("SOCKET-IO") && _inputMessage.value.isNotEmpty()){
             val localMessage = Message(
                 username = username,
                 timeStamp = "",
