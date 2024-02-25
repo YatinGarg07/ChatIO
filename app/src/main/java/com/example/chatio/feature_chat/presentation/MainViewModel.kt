@@ -27,9 +27,6 @@ class MainViewModel @Inject constructor(
     private val repository: ChatRepository
 ): ViewModel() {
 
-
-
-
     private val _listOfMsgs : MutableStateFlow<List<Message>> =
         MutableStateFlow(
             listOf(Message(username = "SOCKETIO", timeStamp = "", msg = "What's Your Name"))
